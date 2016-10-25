@@ -15,10 +15,10 @@
 
 openvas_src_path: /usr/local/src
 
-openvas_src_library: http://wald.intevation.org/frs/download.php/2067/openvas-libraries-8.0.3.tar.gz
-openvas_src_scanner: http://wald.intevation.org/frs/download.php/2071/openvas-scanner-5.0.3.tar.gz
-openvas_src_manager: http://wald.intevation.org/frs/download.php/2075/openvas-manager-6.0.3.tar.gz
-openvas_src_cli: http://wald.intevation.org/frs/download.php/2093/openvas-cli-1.4.1.tar.gz
+openvas_src_library: http://wald.intevation.org/frs/download.php/2067/openvas-libraries-8.0.8.tar.gz
+openvas_src_scanner: http://wald.intevation.org/frs/download.php/2071/openvas-scanner-5.0.7.tar.gz
+openvas_src_manager: http://wald.intevation.org/frs/download.php/2075/openvas-manager-6.0.6.tar.gz
+openvas_src_cli: http://wald.intevation.org/frs/download.php/2093/openvas-cli-1.4.4.tar.gz
 
 openvas_ca_base_path: /usr/local/var/lib/openvas
 openvas_ca_cert_path: "{{ openvas_ca_base_path }}/CA"
