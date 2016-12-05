@@ -22,7 +22,7 @@
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: openvas_packages['openvas_ssl']
+  with_items: "{{ openvas_packages['openvas_ssl'] }}"
   tags:
     - openvas-ssl-package-install
 

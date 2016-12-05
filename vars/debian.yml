@@ -22,7 +22,7 @@ openvas_packages:
     - libksba-dev
     - libgcrypt11-dev
     - libglib2.0-dev
-    - libgnutls-dev
+    - libgnutls28-dev
     - libgpgme11-dev
     - libhiredis-dev
     - libldap2-dev

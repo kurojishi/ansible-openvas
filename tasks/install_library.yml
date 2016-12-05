@@ -16,13 +16,14 @@
 - include: install_common.yml
 
 - name: Install packages for OpenVAS Library
+  environment: "{{ proxy_env }}"
   action: >
-    {{ ansible_pkg_mgr }} name={{ item }} state=present
+    {{ ansible_pkg_mgr }} name={{ item }} state=present update_cache=yes
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: openvas_packages['openvas_library']
+  with_items: "{{openvas_packages['openvas_library']}}"
   tags:
     - openvas-library-package-install
     - openvas-scanner-package-install

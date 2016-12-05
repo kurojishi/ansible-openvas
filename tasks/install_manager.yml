@@ -16,13 +16,14 @@
 - include: install_common.yml
 
 - name: Install packages for OpenVAS Manager
+  environment: "{{ proxy_env }}"
   action: >
     {{ ansible_pkg_mgr }} name={{ item }} state=present
   register: install_packages
   until: install_packages|success
   retries: 5
   delay: 2
-  with_items: openvas_packages['openvas_manager']
+  with_items: "{{openvas_packages['openvas_manager']}}"
   tags:
     - openvas-manager-package-install
 
