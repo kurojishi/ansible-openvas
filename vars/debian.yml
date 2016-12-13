@@ -50,3 +50,8 @@ openvas_packages:
     - texlive-latex-recommended
   openvas_ssl:
     - openssl
+  greenbone-security-assistant:
+    - libxml2-dev
+    - libxslt-dev
+    - libmicrohttpd-dev
+    - gettext

@@ -1,0 +1,92 @@
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- include: install_common.yml
+
+- name: Install packages for Greenbone Security Assistant
+  environment: "{{ proxy_env }}"
+  action: >
+    {{ ansible_pkg_mgr }} name={{ item }} state=present
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  with_items: "{{openvas_packages['greenbone-security-assistant']}}"
+  tags:
+    - greenbone-package-install
+
+- name: Download the source for Greenbone Security Assistant
+  get_url:
+    url: "{{ openvas_src_manager }}"
+    dest: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename }}"
+    mode: "0644"
+  register: package_download
+  retries: 3
+  delay: 10
+  until: package_download|success
+  tags:
+    - greenbone-src-download
+
+- name: Create the directory for Greenbone Security Assistant source extraction
+  file:
+    path: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename | replace('.tar.gz', '') }}/build"
+    state: "directory"
+    group: "root"
+    owner: "root"
+    mode: "0755"
+    recurse: "false"
+  tags:
+    - greenbone-src-extract
+
+- name: Extract the source for Greenbone Security Assistant
+  unarchive:
+    copy: "no"
+    src: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename }}"
+    dest: "{{ openvas_src_path }}/{{openvas_src_greenbone | basename | replace('.tar.gz', '')}}"
+  tags:
+    - greenbone-src-extract
+
+- name: Check for Greenbone Security Assistant Makefile
+  stat:
+    path: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename | replace('.tar.gz', '') }}/build/Makefile"
+  register: openvas_manager_makefile
+  tags:
+    - greenbone-src-install
+
+- name: Install Greenbone Security Assistant from source
+  command: "{{ item }}"
+  args:
+    chdir: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename | replace('.tar.gz', '') }}/build"
+  with_items:
+    - "cmake .."
+    - "make --quiet"
+    - "make --quiet doc-full"
+    - "make --quiet install"
+    - "make --quiet rebuild_cache"
+  when: openvas_manager_makefile.stat.exists == False
+  tags:
+    - greenbone-src-install
+
+- name: Deploy the upstart, init and logrotate files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode|default('0644') }}"
+  with_items:
+    - { src: "systemd/greenbone-security-assistant.service", dest: "/etc/systemd/system/greenbone-security-assistant.service", mode: "0754" }
+    - { src: "logrotate.d/greenbone-security-assistant", dest: "/etc/logrotate.d/greenbone-security-assistant" }
+    - { src: "openvas/gsad_log.conf", dest: "/etc/openvas/gsad_log.conf" }
+  tags:
+    - greenbone-src-install

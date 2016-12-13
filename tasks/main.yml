@@ -25,6 +25,9 @@
 - include: install_cli.yml
   tags: openvas-cli
 
+- include: install_gsa.yml
+  tags: greenbone-security-assistant
+
 - include: install_openssl_ca.yml
   tags: openvas-openssl-ca
 

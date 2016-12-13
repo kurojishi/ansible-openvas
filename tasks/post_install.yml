@@ -129,3 +129,12 @@
   tags:
     - openvas-manager-configure
     - openvas-cli-configure
+
+- name: Start the greenbone daemon
+  systemd:
+    name: greenbone-security-assistant
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  tags:
+    - greenbone-configure
