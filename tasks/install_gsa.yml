@@ -29,7 +29,7 @@
 
 - name: Download the source for Greenbone Security Assistant
   get_url:
-    url: "{{ openvas_src_manager }}"
+    url: "{{ openvas_src_greenbone }}"
     dest: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename }}"
     mode: "0644"
   register: package_download
@@ -54,14 +54,14 @@
   unarchive:
     copy: "no"
     src: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename }}"
-    dest: "{{ openvas_src_path }}/{{openvas_src_greenbone | basename | replace('.tar.gz', '')}}"
+    dest: "{{ openvas_src_path }}/"
   tags:
     - greenbone-src-extract
 
 - name: Check for Greenbone Security Assistant Makefile
   stat:
     path: "{{ openvas_src_path }}/{{ openvas_src_greenbone | basename | replace('.tar.gz', '') }}/build/Makefile"
-  register: openvas_manager_makefile
+  register: greenbone_makefile
   tags:
     - greenbone-src-install
 
@@ -75,9 +75,18 @@
     - "make --quiet doc-full"
     - "make --quiet install"
     - "make --quiet rebuild_cache"
-  when: openvas_manager_makefile.stat.exists == False
+  when: greenbone_makefile.stat.exists == False
   tags:
     - greenbone-src-install
+
+- name: Create the directory for openvas configurations in /etc
+  file:
+    path: "/etc/openvas/"
+    state: "directory"
+    group: "root"
+    owner: "root"
+    mode: "0755"
+    recurse: "false"
 
 - name: Deploy the upstart, init and logrotate files
   copy:

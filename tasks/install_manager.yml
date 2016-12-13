@@ -54,7 +54,7 @@
   unarchive:
     copy: "no"
     src: "{{ openvas_src_path }}/{{ openvas_src_manager | basename }}"
-    dest: "{{ openvas_src_path }}/{{openvas_src_manager | basename | replace('.tar.gz', '')}}"
+    dest: "{{ openvas_src_path }}/"
   tags:
     - openvas-manager-src-extract
 

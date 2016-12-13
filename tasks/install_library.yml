@@ -63,7 +63,7 @@
   unarchive:
     copy: "no"
     src: "{{ openvas_src_path }}/{{ openvas_src_library | basename }}"
-    dest: "{{ openvas_src_path }}/{{ openvas_src_library | basename | replace('.tar.gz', '') }}"
+    dest: "{{ openvas_src_path }}/"
   tags:
     - openvas-library-src-extract
     - openvas-scanner-src-extract
