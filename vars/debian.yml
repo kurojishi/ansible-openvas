@@ -41,6 +41,8 @@ openvas_packages:
     - nmap
     - rsync
     - wget
+    - redis-server
+    - redis-tools
   openvas_manager:
     - htmldoc
     - texlive-latex-base

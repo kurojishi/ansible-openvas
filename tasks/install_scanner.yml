@@ -54,7 +54,7 @@
   unarchive:
     copy: "no"
     src: "{{ openvas_src_path }}/{{ openvas_src_scanner | basename }}"
-    dest: "{{ openvas_src_path }}/"
+    dest: "{{ openvas_src_path }}/{{ openvas_src_scanner | basename | replace('.tar.gz', '') }}"
   tags:
     - openvas-scanner-src-extract
 
@@ -78,14 +78,15 @@
   tags:
     - openvas-scanner-src-install
 
-- name: Deploy the upstart, init and logrotate files
+- name: Deploy the upstart, init, logrotate and redis files
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode|default('0644') }}"
   with_items:
-    - { src: "init.d/openvas-scanner", dest: "/etc/init.d/openvas-scanner", mode: "0755" }
+    - { src: "systemd/openvas-scanner.service", dest: "/etc/systemd/system/openvas-scanner.service", mode: "0754" }
     - { src: "default/openvas-scanner", dest: "/etc/default/openvas-scanner" }
     - { src: "logrotate.d/openvas-scanner", dest: "/etc/logrotate.d/openvas-scanner" }
+    - { src: "redis/redis.conf", dest: "/etc/redis/redis.conf" }
   tags:
     - openvas-scanner-src-install

@@ -25,11 +25,20 @@
   tags:
     - openvas-scanner-configure
 
-- name: Start the scanning daemon
+- name: Start the redis daemon
   service:
-    name: openvas-scanner
+    name: redis-server
     state: running
     enabled: yes
+  tags:
+    - openvas-scanner-configure
+
+- name: Start the scanning daemon
+  systemd:
+    name: openvas-scanner
+    state: started
+    enabled: yes
+    daemon_reload: yes
   tags:
     - openvas-scanner-configure
 
@@ -55,8 +64,13 @@
   tags:
     - openvas-manager-setup
 
+- name: Check if admin exists
+  shell: "openvasmd --get-users | grep -c admin"
+  register: admin_user_exist
+
 - name: Create the Admin user for the Manager
   command: "openvasmd --create-user='{{ openvas_admin_user }}' --role=Admin"
+  when: admin_user_exist == 0
   tags:
     - openvas-manager-setup
 
@@ -90,10 +104,11 @@
     - openvas-manager-setup
 
 - name: Start the manager daemon
-  service:
+  systemd:
     name: openvas-manager
-    state: running
+    state: started
     enabled: yes
+    daemon_reload: yes
   tags:
     - openvas-manager-configure
 

@@ -28,8 +28,8 @@
 - include: install_openssl_ca.yml
   tags: openvas-openssl-ca
 
-#- include: post_install.yml
-#  tags: openvas-post-install
+- include: post_install.yml
+  tags: openvas-post-install
 
-#- include: scan_configure.yml
-#  tags: openvas-scan-configure
+- include: scan_configure.yml
+  tags: openvas-scan-configure
