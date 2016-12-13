@@ -78,14 +78,13 @@
   tags:
     - openvas-manager-src-install
 
-- name: Deploy the upstart, init and logrotate files
+- name: Deploy the systemd and logrotate files
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode|default('0644') }}"
   with_items:
     - { src: "systemd/openvas-manager.service", dest: "/etc/systemd/system/openvas-manager.service", mode: "0754" }
-    - { src: "default/openvas-manager", dest: "/etc/default/openvas-manager" }
     - { src: "logrotate.d/openvas-manager", dest: "/etc/logrotate.d/openvas-manager" }
   tags:
     - openvas-manager-src-install

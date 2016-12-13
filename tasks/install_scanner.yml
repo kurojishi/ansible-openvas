@@ -78,14 +78,13 @@
   tags:
     - openvas-scanner-src-install
 
-- name: Deploy the upstart, init, logrotate and redis files
+- name: Deploy the systemd logrotate and redis files
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{ item.mode|default('0644') }}"
   with_items:
     - { src: "systemd/openvas-scanner.service", dest: "/etc/systemd/system/openvas-scanner.service", mode: "0754" }
-    - { src: "default/openvas-scanner", dest: "/etc/default/openvas-scanner" }
     - { src: "logrotate.d/openvas-scanner", dest: "/etc/logrotate.d/openvas-scanner" }
     - { src: "redis/redis.conf", dest: "/etc/redis/redis.conf" }
   tags:
